@@ -7,14 +7,19 @@
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://kit.fontawesome.com/54c8cea246.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <h1 class="main-title">Mini Apps API Dashboard</h1>
     <div class="grid-container">
-      <div class="grid-items" id="dog-api">
-        <h2>Baby Dog Pictures</h2>
-        <div class="output" id="dog-image-container"></div>
-        <button onclick="get - dog - image()">New Picture</button>
+      <div class="grid-item">
+        <h2><i class="fa-regular fa-sun"></i>Weather App</h2>
+        <input class="city" id="cityInput" placeholder="Enter Your City" />
+        <button id="getWeatherBtn">Get Weather</button>
+        <div id="output" class="results"></div>
       </div>
     </div>
 
