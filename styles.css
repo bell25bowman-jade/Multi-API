@@ -14,3 +14,40 @@
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
 }
+
+/* Constrain result areas so content stays inside each card */
+.results {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  max-height: 220px; /* adjust as needed */
+  overflow: auto;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* Allow poem <pre> to wrap lines while preserving breaks */
+.results pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
+
+:root {
+  --dog-max-height: 220px; /* change this value to adjust dog image/video height */
+}
+
+/* Dog image/video sizing */
+.dog-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  max-height: var(--dog-max-height);
+  margin: 0.5rem auto 0;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.emoji {
+  font-size: 2rem;
+}
