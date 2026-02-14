@@ -48,6 +48,29 @@
   object-fit: cover;
   border-radius: 6px;
 }
+
+/* Art image sizing */
+.art-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  max-height: var(--dog-max-height);
+  margin: 0.5rem auto 0;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* Bird image sizing */
+.bird-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  max-height: var(--dog-max-height);
+  margin: 0.5rem auto 0;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
 .emoji {
   font-size: 2rem;
 }

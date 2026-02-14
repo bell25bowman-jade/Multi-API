@@ -10,7 +10,7 @@ async function getWeather() {
   try {
     outputDiv.innerHTML = "<p>Loading...</p>";
     const response = await fetch(
-      `https://api.weatherstack.com/current?access_key=c75bf33bdfadb866249268012fc13b7e&units=m&query=${encodeURIComponent(city)}`,
+      `https://api.weatherstack.com/current?access_key=c75bf33bdfadb866249268012fc13b7e&units=f&query=${encodeURIComponent(city)}`,
     );
     const data = await response.json();
     console.log("API Response:", data);
@@ -19,7 +19,7 @@ async function getWeather() {
     }
     outputDiv.innerHTML = `
       <h3>Weather in ${data.location.name}, ${data.location.country}</h3>
-      <p><strong>Temperature:</strong> ${data.current.temperature}°C</p>
+      <p><strong>Temperature:</strong> ${data.current.temperature}°F</p>
       <p><strong>Weather:</strong> ${data.current.weather_descriptions[0]}</p>
       <p><strong>Humidity:</strong> ${data.current.humidity}%</p>
     `;
@@ -197,3 +197,89 @@ async function getRandomDog() {
   }
 }
 document.getElementById("getDogBtn").addEventListener("click", getRandomDog);
+
+// fetch random art from The Met Museum
+async function getRandomArt() {
+  const outputDiv = document.getElementById("artOutput");
+  try {
+    // Step 1: Get a list of all object IDs
+    const idsResponse = await fetch(
+      "https://collectionapi.metmuseum.org/public/collection/v1/objects",
+    );
+    const idsData = await idsResponse.json();
+    console.log("Met Museum object IDs response:", idsData);
+    if (!idsData || !idsData.objectIDs || idsData.objectIDs.length === 0) {
+      throw new Error("No object IDs found in API response");
+    }
+
+    // Step 2: Retry until we find an artwork with an image
+    const maxAttempts = 10;
+    let attempt = 0;
+    let artData = null;
+
+    while (attempt < maxAttempts) {
+      const randomId =
+        idsData.objectIDs[Math.floor(Math.random() * idsData.objectIDs.length)];
+      const artResponse = await fetch(
+        `https://collectionapi.metmuseum.org/public/collection/v1/objects/${randomId}`,
+      );
+      artData = await artResponse.json();
+      console.log(
+        "Met Museum object details response (attempt",
+        attempt + 1,
+        "):",
+        artData,
+      );
+
+      // Check if this artwork has an image
+      if (
+        artData &&
+        artData.primaryImageSmall &&
+        artData.primaryImageSmall.length > 0
+      ) {
+        break;
+      }
+      attempt++;
+    }
+
+    if (!artData || !artData.primaryImageSmall) {
+      throw new Error("No artwork with an image found after multiple attempts");
+    }
+
+    const title = artData.title || "Untitled";
+    const artist = artData.artistDisplayName || "Unknown Artist";
+    const imageUrl = artData.primaryImageSmall;
+    outputDiv.innerHTML = `<h3>${title} by ${artist}</h3><img src="${imageUrl}" alt="${title}" class="art-image">`;
+  } catch (error) {
+    outputDiv.innerHTML = `<p class='error'>Error: ${error.message}</p>`;
+  }
+}
+document.getElementById("getArtBtn").addEventListener("click", getRandomArt);
+
+// fetch random Harry Potter fact
+async function getRandomFact() {
+  const outputDiv = document.getElementById("factOutput");
+  try {
+    const response = await fetch(
+      "https://api.api-ninjas.com/v1/facts?category=trivia&limit=1",
+      {
+        headers: {
+          "X-Api-Key": "YOUR_API_KEY_HERE",
+        },
+      },
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch facts");
+    }
+    const data = await response.json();
+    console.log("API Response:", data);
+    if (!data || !Array.isArray(data) || data.length === 0) {
+      throw new Error("No facts found in API response");
+    }
+    const fact = data[0].fact;
+    outputDiv.innerHTML = `<h3>Random Fact</h3><p>${fact}</p>`;
+  } catch (error) {
+    outputDiv.innerHTML = `<p class='error'>Error: ${error.message}</p>`;
+  }
+}
+document.getElementById("getFactBtn").addEventListener("click", getRandomFact);
