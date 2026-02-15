@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Playwrite+NZ+Basic:wght@100..400&display=swap");
 * {
   margin: 0;
   padding: 0;
@@ -72,5 +73,107 @@
 }
 
 .emoji {
-  font-size: 2rem;
+  font-size: 4rem;
+}
+/* Trivia Answer Buttons */
+.trivia-answers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.trivia-answer-btn {
+  padding: 0.75rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.trivia-answer-btn:hover:not(:disabled) {
+  background-color: #0056b3;
+  transform: translateX(4px);
+}
+
+.trivia-answer-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.trivia-answer-btn.correct {
+  background-color: #28a745;
+}
+
+.trivia-answer-btn.incorrect {
+  background-color: #dc3545;
+}
+
+.trivia-result {
+  margin-top: 1rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.trivia-result .success {
+  color: #28a745;
+}
+
+.trivia-result .failure {
+  color: #dc3545;
+}
+
+.error {
+  color: #dc3545;
+}
+button {
+  font-family: "Playwrite NZ Basic", cursive;
+  padding: 5px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: small;
+  transition: all 0.3s ease;
+}
+i {
+  font-size: xx-large;
+  transition: all 0.6s ease;
+  transform-style: preserve-3d;
+}
+i:hover {
+  transform: rotateY(360deg);
+}
+button:hover {
+  background-color: #0056b3;
+  transform: translateX(4px);
+}
+.fa-hotel {
+  color: red;
+}
+.fa-file-circle-question {
+  color: gray;
+}
+.fa-panorama {
+  color: gold;
+}
+.fa-dog {
+  color: brown;
+}
+.fa-face-grin-tongue-wink {
+  color: yellow;
+}
+.fa-feather {
+  color: rgb(84, 202, 241);
+}
+.fa-heart {
+  color: red;
+}
+.fa-sun {
+  color: rgb(252, 252, 57);
 }

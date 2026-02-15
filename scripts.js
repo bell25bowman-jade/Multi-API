@@ -1,3 +1,4 @@
+// Fetch weather data for a city
 async function getWeather() {
   const city = document.getElementById("cityInput").value.trim();
   const outputDiv = document.getElementById("output");
@@ -256,30 +257,127 @@ async function getRandomArt() {
 }
 document.getElementById("getArtBtn").addEventListener("click", getRandomArt);
 
-// fetch random Harry Potter fact
-async function getRandomFact() {
-  const outputDiv = document.getElementById("factOutput");
+//fetch hotel data
+async function getHotelData() {
+  const outputDiv = document.getElementById("hotelOutput");
   try {
-    const response = await fetch(
-      "https://api.api-ninjas.com/v1/facts?category=trivia&limit=1",
+    // Mock hotel data
+    const hotels = [
       {
-        headers: {
-          "X-Api-Key": "YOUR_API_KEY_HERE",
-        },
+        name: "Sunset Dreams Resort",
+        location: "Bali, Indonesia",
+        imageUrl:
+          "https://via.placeholder.com/300x200?text=Sunset+Dreams+Resort",
+        rating: "4.8/5",
       },
-    );
-    if (!response.ok) {
-      throw new Error("Failed to fetch facts");
-    }
-    const data = await response.json();
-    console.log("API Response:", data);
-    if (!data || !Array.isArray(data) || data.length === 0) {
-      throw new Error("No facts found in API response");
-    }
-    const fact = data[0].fact;
-    outputDiv.innerHTML = `<h3>Random Fact</h3><p>${fact}</p>`;
+      {
+        name: "Mountain View Lodge",
+        location: "Swiss Alps, Switzerland",
+        imageUrl:
+          "https://via.placeholder.com/300x200?text=Mountain+View+Lodge",
+        rating: "4.9/5",
+      },
+      {
+        name: "Tropical Paradise Hotel",
+        location: "Maldives",
+        imageUrl: "https://via.placeholder.com/300x200?text=Tropical+Paradise",
+        rating: "4.7/5",
+      },
+      {
+        name: "Urban Elegance Boutique",
+        location: "Paris, France",
+        imageUrl: "https://via.placeholder.com/300x200?text=Urban+Elegance",
+        rating: "4.6/5",
+      },
+      {
+        name: "Beachfront Paradise Inn",
+        location: "Cancun, Mexico",
+        imageUrl:
+          "https://via.placeholder.com/300x200?text=Beachfront+Paradise",
+        rating: "4.5/5",
+      },
+    ];
+
+    const randomHotel = hotels[Math.floor(Math.random() * hotels.length)];
+    console.log("Hotel data:", randomHotel);
+
+    outputDiv.innerHTML = `
+      <h3>${randomHotel.name}</h3>
+      <p><strong>Location:</strong> ${randomHotel.location}</p>
+      <p><strong>Rating:</strong> ${randomHotel.rating}</p>
+      <img src="${randomHotel.imageUrl}" alt="${randomHotel.name}" class="hotel-image">
+    `;
   } catch (error) {
     outputDiv.innerHTML = `<p class='error'>Error: ${error.message}</p>`;
   }
 }
-document.getElementById("getFactBtn").addEventListener("click", getRandomFact);
+document.getElementById("getHotelBtn").addEventListener("click", getHotelData);
+
+//fetch random triva question
+// Store trivia questions for random selection
+let triviaQuestions = [];
+let currentQuestionIndex = 0;
+
+async function getTriviaQuestion() {
+  const outputDiv = document.getElementById("triviaOutput");
+  try {
+    // Fetch a batch of questions if we don't have any or have used them all
+    if (triviaQuestions.length === 0) {
+      const response = await fetch(
+        "https://www.otriviata.com/api.php?ids=1,50,100,150,200,250,300,350,400,450",
+      );
+      const data = await response.json();
+      console.log("Trivia API response:", data);
+      if (!data || !data.results || data.results.length === 0) {
+        throw new Error("No trivia questions found in API response");
+      }
+      triviaQuestions = data.results;
+      currentQuestionIndex = 0;
+    }
+
+    // Pick a random question from the batch
+    const randomIndex = Math.floor(Math.random() * triviaQuestions.length);
+    const questionData = triviaQuestions[randomIndex];
+
+    const question = questionData.question;
+    const correctAnswer = questionData.correct_answer;
+    const incorrectAnswers = questionData.incorrect_answers;
+    const allAnswers = [...incorrectAnswers, correctAnswer].sort(
+      () => 0.5 - Math.random(),
+    );
+    outputDiv.innerHTML = `
+      <h3>Trivia Question</h3>
+      <p>${question}</p>
+      <div class="trivia-answers">
+        ${allAnswers.map((answer) => `<button class="trivia-answer-btn" data-answer="${answer}">${answer}</button>`).join("")}
+      </div>
+      <p class="trivia-result" id="triviaResult"></p>
+    `;
+
+    // Add event listeners to answer buttons
+    document.querySelectorAll(".trivia-answer-btn").forEach((btn) => {
+      btn.addEventListener("click", function () {
+        const selectedAnswer = this.getAttribute("data-answer");
+        const resultDiv = document.getElementById("triviaResult");
+
+        // Disable all buttons after selection
+        document.querySelectorAll(".trivia-answer-btn").forEach((b) => {
+          b.disabled = true;
+        });
+
+        if (selectedAnswer === correctAnswer) {
+          this.classList.add("correct");
+          resultDiv.innerHTML = `<span class="success">✓ Correct! The answer is: ${correctAnswer}</span>`;
+        } else {
+          this.classList.add("incorrect");
+          resultDiv.innerHTML = `<span class="failure">✗ Incorrect! The correct answer is: ${correctAnswer}</span>`;
+        }
+      });
+    });
+  } catch (error) {
+    outputDiv.innerHTML = `<p class='error'>Error: ${error.message}</p>`;
+  }
+}
+document
+  .getElementById("getTriviaBtn")
+  .addEventListener("click", getTriviaQuestion);
